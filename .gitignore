@@ -1,0 +1,55 @@
+# ---- Project data & external sources (not source code, regenerable) ----
+# Cloned source repositories used for mining (~7.4 GB)
+/repos/
+# Generated datasets, embeddings, mining checkpoints (~160 MB)
+/data/
+# External cloned repo (SAP project-kb) — has its own git history
+/project-kb/
+# Original course-material archive
+material.zip
+
+# Course-provided materials (task sheets, solution notebook, challenge data)
+# — not our work, kept out of the public repo
+/Task/
+referece_part2.ipynb
+
+# Report submission (contains personal data — matriculation numbers)
+CDS-PBL_Report_Template.docx
+
+# Local coding-guidelines file (not part of the project)
+CLAUDE.md
+
+# ---- Data / model artifacts (by type) ----
+*.hdf5
+*.h5
+*.npy
+*.npz
+*.pth
+*.pt
+*.ckpt
+*.bin
+*.zip
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ---- Editors / OS ----
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.log
