@@ -4,15 +4,14 @@ Course project for the MSc course **Cybersecurity Data Science** (PBL), Hamburg 
 of Technology (TUHH). The task: given the source code of a single Java method, predict
 whether it is vulnerable.
 
-**Result: Rank #1 on the course challenge leaderboard** — F1 62.3%, precision 55.1%,
-recall 71.7%, accuracy 74.0% on the 1,000-method challenge set.
+**Result: Rank #1 on the course challenge leaderboard** (1,000-method challenge set) — see
+[Results](#results).
 
 ## Contributors
 
 <!-- Name, Surname | Matriculation No -->
-- Jay Shiroya
-- *(add teammate)*
-- *(add teammate)*
+- Jay Sureshbhai Shiroya | 674160
+- Daniel Schaumann | 51006
 
 ## Repository structure
 
@@ -25,24 +24,38 @@ recall 71.7%, accuracy 74.0% on the 1,000-method challenge set.
 | `PART3_TRAINING_APPROACHES.md` | Full experiment log — every approach tried in Part 3, including the failures |
 | `lab/requirements.txt` | Python dependencies |
 
-## Approach in one paragraph
+## Approach
 
-Part 2 mines SAP ProjectKB: each CVE statement maps to the Git commit(s) that fix it. Rather
-than cloning all 594 referenced repositories in full (infeasible — some are tens of GB), we
-fetch only each fixing commit and its parent (`git fetch --depth 2 --filter=blob:none`) and
-extract, with PyDriller, the Java methods it changed — the pre-commit version labelled
-*vulnerable*, the post-commit version *fixed*. No synthetic "unchanged method" padding is
-added, so the result is honest and roughly balanced: **6,530 methods, 51.0% vulnerable, 663
-CVEs, 264 repos**. Part 3 rebuilds this into **dataset v2 — 14,887 methods (20.4% vulnerable,
-691 CVEs, 270 repos)** by adding the post-fix twins as hard negatives and length-matched
-unchanged same-repo methods as easy negatives. Part 3 shows that pointwise classification on pure before/after
-pairs is at chance (the two classes are near-identical code), that a contrastive pair-ranking
-loss is the first thing to beat chance, and that the decisive lift comes from **rebuilding the
-dataset to match the real task** ("vulnerable vs ordinary code", not "pre-patch vs
-post-patch"). The final model is a frozen-bottom **UniXcoder** encoder with 16 regex-based
-static security features concatenated to the CLS embedding, trained with class-weighted BCE
-under a leakage-free repository-grouped split. See `PART3_TRAINING_APPROACHES.md` for the
-complete history.
+**Part 2 — dataset.** Each SAP ProjectKB CVE maps to its fixing commit(s). Rather than cloning
+all 594 referenced repositories in full (infeasible — some are tens of GB), we fetch only each
+fixing commit and its parent (`git fetch --depth 2 --filter=blob:none`) and use PyDriller to
+extract the Java methods the commit changed — the pre-commit version labelled *vulnerable*, the
+post-commit version *fixed* (**6,530 methods, 51% vulnerable, 663 CVEs, 264 repos**).
+
+**Part 3 — the key finding.** On pure before/after pairs the two classes are near-identical code
+(embedding cosine 0.995), so *pointwise* classification sits at chance and even a contrastive
+pair-ranking loss only reaches ~0.58 AUC. The decisive lift came from **rebuilding the dataset to
+match the real task** — "vulnerable vs ordinary code", not "pre-patch vs post-patch". Dataset v2
+adds the post-fix twins as hard negatives and length-matched same-repo methods as easy negatives
+(**14,887 methods, 20.4% vulnerable, 691 CVEs, 270 repos**).
+
+**Final model.** A **UniXcoder-base** encoder (embeddings + bottom 8 layers frozen) with 16
+regex-based static security features concatenated to the CLS embedding, trained pointwise with
+**class-weighted BCE** under a leakage-free **repository-grouped** split; the operating threshold
+is picked on validation max-F1. An auxiliary pair-ranking loss was tried on v2 and *dropped* — it
+hurt (val PR-AUC 0.271 vs 0.290). See `PART3_TRAINING_APPROACHES.md` for the full experiment log,
+including every failure.
+
+## Results
+
+Rank #1 on the course challenge leaderboard (1,000 held-out Java methods):
+
+| Metric | Score |
+|--------|-------|
+| F1 | 62.3% |
+| Precision | 55.1% |
+| Recall | 71.7% |
+| Accuracy | 74.0% |
 
 ## Not included in this repo
 
