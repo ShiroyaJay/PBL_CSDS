@@ -20,8 +20,6 @@ whether it is vulnerable.
 | `lab/CDS_project_part1.ipynb` | Part 1 — baseline model on the provided student dataset |
 | `CDS_project_part2.ipynb` | Part 2 — dataset construction: mining vulnerable/fixed Java methods from [SAP ProjectKB](https://github.com/SAP/project-kb) fix commits with PyDriller |
 | `CDS_project_part3.ipynb` | Part 3 — model training and challenge submission (UniXcoder + static-feature hybrid) |
-| `CDS_part2_plan.md` | Part 2 planning notes |
-| `PART3_TRAINING_APPROACHES.md` | Full experiment log — every approach tried in Part 3, including the failures |
 | `lab/requirements.txt` | Python dependencies |
 
 ## Approach
@@ -43,8 +41,7 @@ adds the post-fix twins as hard negatives and length-matched same-repo methods a
 regex-based static security features concatenated to the CLS embedding, trained pointwise with
 **class-weighted BCE** under a leakage-free **repository-grouped** split; the operating threshold
 is picked on validation max-F1. An auxiliary pair-ranking loss was tried on v2 and *dropped* — it
-hurt (val PR-AUC 0.271 vs 0.290). See `PART3_TRAINING_APPROACHES.md` for the full experiment log,
-including every failure.
+hurt (val PR-AUC 0.271 vs 0.290).
 
 ## Results
 

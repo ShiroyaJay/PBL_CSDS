@@ -19,6 +19,11 @@ CDS-PBL_Report_Template.docx
 # Local coding-guidelines file (not part of the project)
 CLAUDE.md
 
+# Internal planning / experiment-log docs (kept local, not published)
+CDS_part2_plan.md
+PART3_TRAINING_APPROACHES.md
+PROJECT_EXPLAINED.md
+
 # ---- Data / model artifacts (by type) ----
 *.hdf5
 *.h5
